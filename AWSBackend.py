@@ -2,15 +2,15 @@ import sagemaker
 import boto3
 import io
 import os
+import csv
 from numpy import genfromtxt
 from sagemaker.amazon.amazon_estimator import get_image_uri
-from sagemaker import get_execution_role
 
 
 def compute_ML():
     """ Upload, Train, and Predict """
     train_data_path, bucket, formatted_data = upload()
-    #submit_training_job(train_data_path, bucket, formatted_data)
+    submit_training_job(train_data_path, bucket, formatted_data)
 
 
 def upload():
@@ -23,8 +23,8 @@ def upload():
     key = 'train.protobuf'  # or 'test.protobuf'
 
     # convert data to numpy format for protobuf transformation
-    formatted_data = genfromtxt(data, delimiter=',')
-    formatted_labels = genfromtxt(labels)
+    formatted_data = genfromtxt(data, dtype='f', delimiter=',')
+    formatted_labels = genfromtxt(labels, dtype='f')
     print(formatted_data)
     print(formatted_labels)
 
@@ -34,8 +34,7 @@ def upload():
     buf.seek(0)
 
     # upload the data to S3
-    with open(data, "rb") as f:
-        boto3.resource('s3').Bucket(bucket).Object(os.path.join(prefix, key)).upload_fileobj(f)
+    boto3.resource('s3').Bucket(bucket).Object(os.path.join(prefix, key)).upload_fileobj(buf)
 
     train_data_path = f's3://{bucket}/{prefix}\{key}'
 
@@ -51,7 +50,7 @@ def submit_training_job(path_to_train_data, bucket, formatted_data):
     train_data_path = path_to_train_data
 
     # path_to_test_data = f's3://ml-web-app/test/test.protobuf'
-    job_name = 'iris-train'
+    # job_name = 'iris-train'
 
     output_path = 's3://{}/{}/factorization_machine_output'.format(bucket, output_prefix)
 
@@ -65,9 +64,9 @@ def submit_training_job(path_to_train_data, bucket, formatted_data):
 
     # run training job
 
-    estimator.fit(train_data_path, job_name=job_name)
+    estimator.fit({'train': train_data_path})
 
-    training_job_name = estimator.latest_training_job.job_name
+    # training_job_name = estimator.latest_training_job.job_name
 
 
 if __name__ == '__main__':
