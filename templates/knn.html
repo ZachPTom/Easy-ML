@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>K-Nearest Neighbors</title>
+</head>
+<body>
+    <form action="knn/uploader" method = "POST" enctype = "multipart/form-data">
+        <p> Upload your data file. It must be in .csv format, with the last column being the ground truths.
+            <input type = "file" name = "data"/></p>
+        <p>K: Number of neighbors <input type="text" name="k"/></p>
+        <p>Sample Size: Number of data points to sample from training <input type="text" name="size"/></p>
+        <button type="submit" name ='submit'>Submit</button>
+    </form>
+</body>
+</html>
