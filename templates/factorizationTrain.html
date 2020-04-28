@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Training your model</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+</head>
+<body>
+    <div id="content">
+    <p>Ready to begin training your model!</p>
+    <form action="/factorization/train" method="post">
+        <button type="submit" onclick="$('#training').show();">Begin!</button>
+    </form><br>
+    </div>
+
+    <div id="training" style="display:none"><img src="/static/ajax-loader.gif"/>Now Training</div>
+</body>
+</html>
